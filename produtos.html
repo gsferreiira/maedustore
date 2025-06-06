@@ -49,26 +49,51 @@
         position: relative;
     }
     
+    /* Botão de Voltar Estilizado */
     .btn-voltar {
-        position: absolute;
-        top: -20px;
-        left: 0;
+        position: fixed;
+        top: 120px;
+        left: 20px;
+        z-index: 100;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        padding: 0.8rem 1.5rem;
-        background: #f1f1f1;
-        color: var(--cor-texto);
+        gap: 10px;
+        padding: 12px 20px;
+        background-color: #000;
+        color: white;
         text-decoration: none;
-        border-radius: 8px;
+        border-radius: 30px;
         font-weight: 600;
         transition: all 0.3s ease;
-        border: 1px solid #ddd;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        border: 2px solid #000;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .btn-voltar.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
     
     .btn-voltar:hover {
-        background: #e0e0e0;
-        transform: translateY(-2px);
+        background-color: var(--cor-destaque);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(230, 57, 70, 0.3);
+        border-color: var(--cor-destaque);
+    }
+    
+    .btn-voltar:hover.visible {
+        transform: translateY(-3px);
+    }
+    
+    .btn-voltar i {
+        transition: transform 0.3s ease;
+    }
+    
+    .btn-voltar:hover i {
+        transform: translateX(-5px);
     }
     
     .carrossel {
@@ -300,6 +325,24 @@
         box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
     }
     
+    /* Estilos para o header reduzido */
+    header.scrolled {
+        padding: 5px 0 !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    header.scrolled .logo h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    header.scrolled .logo p {
+        display: none;
+    }
+    
+    header.scrolled .container {
+        padding: 5px 0 !important;
+    }
+    
     /* Responsivo */
     @media (max-width: 992px) {
         .produto-container {
@@ -335,8 +378,22 @@
         }
         
         .btn-voltar {
-            position: static;
-            margin-bottom: 1rem;
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            background-color: rgba(0,0,0,0.9);
+        }
+        
+        header.scrolled {
+            padding: 0 !important;
+        }
+        
+        header.scrolled .logo h1 {
+            font-size: 1.3rem !important;
         }
     }
     
@@ -363,11 +420,17 @@
         .tamanho-btn {
             padding: 0.6rem 1rem;
         }
+        
+        .btn-voltar {
+            top: 60px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+        }
     }
     </style>
 </head>
 <body>
-    <header>
+    <header id="home">
         <div class="container">
             <div class="logo">
                 <h1>MAEDU STORE</h1>
@@ -384,13 +447,14 @@
         </div>
     </header>
 
+    <!-- Botão de Voltar Fixo -->
+    <a href="index.html#produtos" class="btn-voltar">
+        <i class="fas fa-arrow-left"></i> Voltar para Loja
+    </a>
+
     <section class="produto-detalhe">
         <div class="container">
             <div class="produto-container">
-                <a href="index.html#produtos" class="btn-voltar">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </a>
-                
                 <div class="carrossel">
                     <div class="carrossel-container">
                         <img id="imagem-principal" src="imagens/cavado.jpeg" alt="Body Cavado Preto" class="carrossel-principal">
@@ -498,6 +562,8 @@
             const nextBtn = document.querySelector('.next-btn');
             const tamanhoBtns = document.querySelectorAll('.tamanho-btn');
             const whatsappLink = document.querySelector('.btn-comprar-detalhe');
+            const btnVoltar = document.querySelector('.btn-voltar');
+            const header = document.querySelector('header');
             
             let currentIndex = 0;
 
@@ -559,6 +625,23 @@
                 if (e.key === 'ArrowLeft') prevBtn.click();
                 if (e.key === 'ArrowRight') nextBtn.click();
             });
+
+            // Efeito de scroll no header
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                    btnVoltar.classList.add('visible');
+                } else {
+                    header.classList.remove('scrolled');
+                    btnVoltar.classList.remove('visible');
+                }
+            });
+
+            // Mostra o botão de voltar se já estiver scrolled
+            if (window.scrollY > 100) {
+                btnVoltar.classList.add('visible');
+                header.classList.add('scrolled');
+            }
 
             // Inicializa o carrossel
             renderMiniaturas();

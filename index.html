@@ -7,6 +7,91 @@
     <link rel="stylesheet" href="estilo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="shortcut icon" href="imagens/logo.jpeg" type="image/x-icon">
+    <style>
+        /* Estilos adicionais para o header reduzido */
+        header.scrolled {
+            padding: 10px 0 !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        header.scrolled .logo h1 {
+            font-size: 1.5rem !important;
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled .logo p {
+            display: none;
+        }
+        
+        header.scrolled .container {
+            padding: 0 !important;
+        }
+        
+        /* Botão de voltar */
+        .btn-voltar {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background-color: #000;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid #000;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        
+        .btn-voltar.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .btn-voltar:hover {
+            background-color: #e63946;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(230, 57, 70, 0.3);
+            border-color: #e63946;
+        }
+        
+        .btn-voltar i {
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-voltar:hover i {
+            transform: translateX(-5px);
+        }
+        
+        @media (max-width: 768px) {
+            .btn-voltar {
+                top: 70px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                width: auto;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-voltar.visible {
+                transform: translateX(-50%) translateY(0);
+            }
+            
+            header.scrolled {
+                padding: 5px 0 !important;
+            }
+            
+            header.scrolled .logo h1 {
+                font-size: 1.3rem !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <header id="home">
@@ -25,6 +110,11 @@
             </nav>
         </div>
     </header>
+
+    <!-- Botão de Voltar -->
+    <a href="#" class="btn-voltar">
+        <i class="fas fa-arrow-up"></i> Voltar ao Topo
+    </a>
 
     <section id="banner">
         <div class="container">
@@ -63,7 +153,8 @@
                             <p class="preco">R$ 70,90</p>
                             <a href="produtos3.html"><button class="btn-comprar">Comprar</button></a>
                         </div>
-                    </div><div class="produto">
+                    </div>
+                    <div class="produto">
                         <img src="imagens/cavado.jpeg" alt="Body Cavado preto">
                         <div class="produto-content">
                             <h3>Body de Manga Longa Cavado</h3>
@@ -86,7 +177,8 @@
                             <p class="preco">R$ 70,90</p>
                             <a href="produtos3.html"><button class="btn-comprar">Comprar</button></a>
                         </div>
-                    </div><div class="produto">
+                    </div>
+                    <div class="produto">
                         <img src="imagens/cavado.jpeg" alt="Body Cavado preto">
                         <div class="produto-content">
                             <h3>Body de Manga Longa Cavado</h3>
@@ -180,7 +272,10 @@
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
             const produtoWidth = document.querySelector('.produto').offsetWidth + 20;
+            const header = document.querySelector('header');
+            const btnVoltar = document.querySelector('.btn-voltar');
             
+            // Controle do carrossel
             prevBtn.addEventListener('click', () => {
                 carrossel.scrollBy({ left: -produtoWidth * 2, behavior: 'smooth' });
             });
@@ -234,6 +329,32 @@
                 const x = e.touches[0].pageX - carrossel.offsetLeft;
                 const walk = (x - startX) * 2;
                 carrossel.scrollLeft = scrollLeft - walk;
+            });
+            
+            // Controle do header e botão de voltar
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                    btnVoltar.classList.add('visible');
+                } else {
+                    header.classList.remove('scrolled');
+                    btnVoltar.classList.remove('visible');
+                }
+            });
+            
+            // Verifica a posição inicial
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+                btnVoltar.classList.add('visible');
+            }
+            
+            // Botão de voltar ao topo
+            btnVoltar.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
         });
     </script>
