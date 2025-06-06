@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Body Cavado - Maedu Store</title>
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="shortcut icon" href="imagens/logo.jpeg" type="image/x-icon">
+    <style>
+    :root {
+        --cor-destaque: #e63946;
+        --cor-texto: #333;
+        --cor-texto-claro: #555;
+        --cor-fundo: #fff;
+        --cor-fundo-claro: #f9f9f9;
+    }
+    
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--cor-texto);
+        background-color: var(--cor-fundo);
+        line-height: 1.6;
+    }
+    
+    .produto-detalhe {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: 2rem 0;
+        background-color: var(--cor-fundo);
+    }
+    
+    .container {
+        width: 90%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .produto-container {
+        display: flex;
+        gap: 3rem;
+        align-items: center;
+        position: relative;
+    }
+    
+    .btn-voltar {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 1.5rem;
+        background: #f1f1f1;
+        color: var(--cor-texto);
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 1px solid #ddd;
+    }
+    
+    .btn-voltar:hover {
+        background: #e0e0e0;
+        transform: translateY(-2px);
+    }
+    
+    .carrossel {
+        flex: 1;
+        max-width: 600px;
+        position: relative;
+    }
+    
+    .carrossel-container {
+        position: relative;
+        width: 100%;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    
+    .carrossel-principal {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+    
+    .carrossel-principal:hover {
+        transform: scale(1.02);
+    }
+    
+    .carrossel-controles {
+        position: absolute;
+        top: 50%;
+        width: 87%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+        padding: 0 1rem;
+    }
+    
+    .carrossel-btn {
+        width: 3.5rem;
+        height: 3.5rem;
+        background: rgba(255,255,255,0.9);
+        color: #333;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .carrossel-btn:hover {
+        background: var(--cor-destaque);
+        color: white;
+        transform: scale(1.1);
+        box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
+    }
+    
+    .carrossel-miniaturas {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0.5rem;
+    }
+    
+    .carrossel-miniatura {
+        width: 5rem;
+        height: 5rem;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    .carrossel-miniatura:hover {
+        border-color: var(--cor-destaque);
+        transform: scale(1.05);
+    }
+    
+    .carrossel-miniatura.ativo {
+        border-color: var(--cor-destaque);
+        transform: scale(1.05);
+        box-shadow: 0 0 0 2px var(--cor-destaque);
+    }
+    
+    .produto-info {
+        flex: 1;
+        padding: 1rem;
+    }
+    
+    .produto-titulo {
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        margin-bottom: 1rem;
+        color: var(--cor-texto);
+        font-weight: 700;
+        line-height: 1.2;
+    }
+    
+    .produto-preco {
+        font-size: clamp(2rem, 5vw, 4.3rem);
+        color: var(--cor-destaque);
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .produto-preco small {
+        font-size: 1.2rem;
+        color: var(--cor-texto-claro);
+        text-decoration: line-through;
+    }
+    
+    .produto-descricao {
+        margin-bottom: 2rem;
+        line-height: 1.7;
+        font-size: 1.1rem;
+        color: var(--cor-texto-claro);
+    }
+    
+    .produto-detalhes {
+        margin-bottom: 2.5rem;
+        padding: 1.5rem;
+        background-color: var(--cor-fundo-claro);
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .produto-detalhes h4 {
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        color: var(--cor-texto);
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    .produto-detalhes h4::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: var(--cor-destaque);
+    }
+    
+    .produto-detalhes ul {
+        list-style-position: inside;
+        padding-left: 0;
+    }
+    
+    .produto-detalhes li {
+        margin-bottom: 0.8rem;
+        color: var(--cor-texto-claro);
+        position: relative;
+        padding-left: 1.5rem;
+    }
+    
+    .produto-detalhes li::before {
+        content: '•';
+        color: var(--cor-destaque);
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+    
+    .tamanhos-opcoes {
+        display: flex;
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .tamanho-btn {
+        padding: 0.8rem 1.5rem;
+        background: #f1f1f1;
+        color: var(--cor-texto);
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        min-width: 50px;
+        text-align: center;
+    }
+    
+    .tamanho-btn:hover {
+        background: #e0e0e0;
+        transform: translateY(-2px);
+    }
+    
+    .tamanho-btn.ativo {
+        background: var(--cor-destaque);
+        color: white;
+        border-color: var(--cor-destaque);
+        box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+    }
+    
+    .btn-comprar-detalhe {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        padding: 1rem 2.5rem;
+        background: #000;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        width: fit-content;
+        margin-top: 1rem;
+    }
+    
+    .btn-comprar-detalhe:hover {
+        background: var(--cor-destaque);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(230, 57, 70, 0.3);
+    }
+    
+    /* Responsivo */
+    @media (max-width: 992px) {
+        .produto-container {
+            gap: 2rem;
+        }
+        
+        .carrossel {
+            max-width: 500px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .produto-detalhe {
+            padding: 1.5rem 0;
+        }
+        
+        .produto-container {
+            flex-direction: column;
+        }
+        
+        .carrossel {
+            max-width: 100%;
+        }
+        
+        .produto-info {
+            width: 100%;
+            padding: 0;
+        }
+        
+        .btn-comprar-detalhe {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn-voltar {
+            position: static;
+            margin-bottom: 1rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .carrossel-btn {
+            width: 3rem;
+            height: 3rem;
+            font-size: 1.2rem;
+        }
+        
+        .carrossel-miniatura {
+            width: 4rem;
+            height: 4rem;
+        }
+        
+        .produto-detalhes {
+            padding: 1rem;
+        }
+        
+        .tamanhos-opcoes {
+            flex-wrap: wrap;
+        }
+        
+        .tamanho-btn {
+            padding: 0.6rem 1rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>MAEDU STORE</h1>
+                <p>Onde seu estilo ganha vida!</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#produtos">Produtos</a></li>
+                    <li><a href="index.html#sobre">Sobre</a></li>
+                    <li><a href="https://wa.me/5541996125979">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="produto-detalhe">
+        <div class="container">
+            <div class="produto-container">
+                <a href="index.html#produtos" class="btn-voltar">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+                
+                <div class="carrossel">
+                    <div class="carrossel-container">
+                        <img id="imagem-principal" src="imagens/cavado.jpeg" alt="Body Cavado Preto" class="carrossel-principal">
+                        <div class="carrossel-controles">
+                            <button class="carrossel-btn prev-btn" aria-label="Anterior">&#10094;</button>
+                            <button class="carrossel-btn next-btn" aria-label="Próximo">&#10095;</button>
+                        </div>
+                    </div>
+                    <div class="carrossel-miniaturas" id="miniaturas">
+                        <img src="imagens/cavado.jpeg" alt="Body Cavado Preto - Vista Frontal" class="carrossel-miniatura ativo">
+                        <img src="imagens/cavado.jpeg" alt="Body Cavado Preto - Vista Lateral" class="carrossel-miniatura">
+                        <img src="imagens/cavado.jpeg" alt="Body Cavado Preto - Detalhe" class="carrossel-miniatura">
+                        <img src="imagens/cavado.jpeg" alt="Body Cavado Preto - Costas" class="carrossel-miniatura">
+                    </div>
+                </div>
+                <div class="produto-info">
+                    <h1 class="produto-titulo">Body de Manga Longa Cavado</h1>
+                    <p class="produto-preco">R$ 65,90 <small>R$ 89,90</small></p>
+                    <p class="produto-descricao">O body perfeito para quem busca um visual moderno e sofisticado. Confeccionado em tecido de alta qualidade com ótimo caimento, ele valoriza suas curvas com elegância.</p>
+                    
+                    <div class="produto-detalhes">
+                        <h4>Detalhes do Produto</h4>
+                        <p>O body de manga longa cavado é a escolha perfeita para quem busca um visual moderno, sensual e versátil. Com recorte cavado nas laterais e ajuste justo ao corpo, ele valoriza as curvas com elegância, sem abrir mão do conforto.</p>
+                        <ul>
+                            <li>Material: 95% Algodão, 5% Elastano</li>
+                            <li>Cor: Preto</li>
+                            <li>Recorte cavado nas laterais</li>
+                            <li>Manga longa</li>
+                            <li>Ajuste justo ao corpo</li>
+                            <li>Indicação de lavagem: Lavar à mão</li>
+                            <li>Disponível nos tamanhos: P, M, G</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tamanhos">
+                        <h4>Selecione o tamanho:</h4>
+                        <div class="tamanhos-opcoes">
+                            <button class="tamanho-btn">P</button>
+                            <button class="tamanho-btn ativo">M</button>
+                            <button class="tamanho-btn">G</button>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/5541996125979?text=Olá,%20gostaria%20de%20comprar%20o%20Body%20de%20Manga%20Longa%20Cavado%20tamanho%20M" class="btn-comprar-detalhe">
+                        <i class="fab fa-whatsapp"></i> Comprar via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-col">
+                <h3>MAEDU STORE</h3>
+                <p>Onde seu estilo ganha vida!</p>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/_maedustore_/?hl=en"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="https://wa.me/5541996125979"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#produtos">Produtos</a></li>
+                    <li><a href="index.html#sobre">Sobre</a></li>
+                    <li><a href="https://wa.me/5541996125979">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contato</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Rua da Moda, 123 - Centro</p>
+                <p><i class="fas fa-phone"></i> <a href="https://wa.me/5541996125979" class="whatsapp-link">(41) 99612-5979</a></p>
+                <p><i class="fas fa-envelope"></i> maeduardaoliveir@icloud.com</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Maedu Store. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dados do produto
+            const produto = {
+                nome: "Body de Manga Longa Cavado",
+                preco: "65,90",
+                precoOriginal: "89,90",
+                descricao: "O body perfeito para quem busca um visual moderno e sofisticado. Confeccionado em tecido de alta qualidade com ótimo caimento, ele valoriza suas curvas com elegância.",
+                imagens: [
+                    { src: 'imagens/cavado.jpeg', alt: 'Body Cavado Preto - Vista Frontal' },
+                    { src: 'imagens/cavado.jpeg', alt: 'Body Cavado Preto - Vista Lateral' },
+                    { src: 'imagens/cavado.jpeg', alt: 'Body Cavado Preto - Detalhe' },
+                    { src: 'imagens/cavado.jpeg', alt: 'Body Cavado Preto - Costas' }
+                ],
+                tamanhos: ["P", "M", "G"]
+            };
+
+            // Elementos do DOM
+            const imagemPrincipal = document.getElementById('imagem-principal');
+            const miniaturasContainer = document.getElementById('miniaturas');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            const tamanhoBtns = document.querySelectorAll('.tamanho-btn');
+            const whatsappLink = document.querySelector('.btn-comprar-detalhe');
+            
+            let currentIndex = 0;
+
+            // Preenche as miniaturas dinamicamente
+            function renderMiniaturas() {
+                miniaturasContainer.innerHTML = '';
+                produto.imagens.forEach((img, index) => {
+                    const miniatura = document.createElement('img');
+                    miniatura.src = img.src;
+                    miniatura.alt = img.alt;
+                    miniatura.className = 'carrossel-miniatura' + (index === 0 ? ' ativo' : '');
+                    miniatura.addEventListener('click', () => updateImage(index));
+                    miniaturasContainer.appendChild(miniatura);
+                });
+            }
+
+            // Atualiza a imagem principal
+            function updateImage(index) {
+                currentIndex = index;
+                const img = produto.imagens[index];
+                imagemPrincipal.src = img.src;
+                imagemPrincipal.alt = img.alt;
+                
+                // Atualiza miniaturas ativas
+                document.querySelectorAll('.carrossel-miniatura').forEach((miniatura, i) => {
+                    if (i === index) {
+                        miniatura.classList.add('ativo');
+                    } else {
+                        miniatura.classList.remove('ativo');
+                    }
+                });
+            }
+
+            // Navegação
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + produto.imagens.length) % produto.imagens.length;
+                updateImage(currentIndex);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % produto.imagens.length;
+                updateImage(currentIndex);
+            });
+
+            // Seleção de tamanho
+            tamanhoBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelector('.tamanho-btn.ativo')?.classList.remove('ativo');
+                    btn.classList.add('ativo');
+                    
+                    // Atualiza link do WhatsApp com o tamanho selecionado
+                    const tamanho = btn.textContent;
+                    whatsappLink.href = `https://wa.me/5541996125979?text=Olá,%20gostaria%20de%20comprar%20o%20${encodeURIComponent(produto.nome)}%20tamanho%20${tamanho}`;
+                });
+            });
+
+            // Navegação por teclado
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') prevBtn.click();
+                if (e.key === 'ArrowRight') nextBtn.click();
+            });
+
+            // Inicializa o carrossel
+            renderMiniaturas();
+        });
+    </script>
+</body>
+</html>
