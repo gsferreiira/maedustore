@@ -282,6 +282,11 @@ nav ul li a i {
     letter-spacing: 1px;
 }
 
+.produto-content a {
+    text-decoration: none;
+    display: inline-block; /* Isso ajuda no alinhamento */
+}
+
 .btn-comprar:hover {
     background: #e63946;
     letter-spacing: 2px;
