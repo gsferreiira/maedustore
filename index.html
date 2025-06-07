@@ -9,8 +9,12 @@
     <link rel="shortcut icon" href="imagens/logo.jpeg" type="image/x-icon">
     <style>
         /* Estilos adicionais para o header reduzido */
+        header {
+            padding: 10px 0;
+        }
+        
         header.scrolled {
-            padding: 10px 0 !important;
+            padding: 5px 0 !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
@@ -23,8 +27,86 @@
             display: none;
         }
         
-        header.scrolled .container {
-            padding: 0 !important;
+        /* Menu Mobile */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+            background: transparent;
+            border: none;
+            margin-left: 120px;
+        }
+        
+        .menu-toggle i {
+            font-size: 1.5rem;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle.active i {
+            color: #fff;
+        }
+        
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background-color: #222;
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 80px 20px 20px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mobile-menu.active {
+            right: 0;
+        }
+        
+        .mobile-menu ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mobile-menu ul li {
+            margin: 15px 0;
+        }
+        
+        .mobile-menu ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .mobile-menu ul li a:hover {
+            background-color: #e63946;
+            transform: translateX(5px);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
         
         /* Botão de voltar */
@@ -69,7 +151,34 @@
             transform: translateX(-5px);
         }
         
+        /* Ajustes para o logo e menu */
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        nav.desktop-menu ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav.desktop-menu ul li {
+            margin-left: 25px;
+        }
+        
         @media (max-width: 768px) {
+            header .container {
+                padding: 0 15px !important;
+            }
+            
             .btn-voltar {
                 top: 70px;
                 left: 50%;
@@ -83,12 +192,25 @@
                 transform: translateX(-50%) translateY(0);
             }
             
-            header.scrolled {
-                padding: 5px 0 !important;
-            }
-            
             header.scrolled .logo h1 {
                 font-size: 1.3rem !important;
+            }
+            
+            /* Menu Mobile */
+            nav.desktop-menu {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+            
+            .logo p {
+                display: none;
             }
         }
     </style>
@@ -97,10 +219,18 @@
     <header id="home">
         <div class="container">
             <div class="logo">
-                <h1>MAEDU STORE</h1>
-                <p>Tudo o Que Você Ama, Em Um Só Lugar!</p>
+                <div class="logo-content">
+                    <h1>MAEDU STORE</h1>
+                    <p>Tudo o Que Você Ama, Em Um Só Lugar!</p>
+                </div>
+                <!-- Botão do Menu Mobile -->
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
-            <nav>
+            
+            <!-- Menu Desktop -->
+            <nav class="desktop-menu">
                 <ul>
                     <li><a href="#banner">Home</a></li>
                     <li><a href="#produtos">Produtos</a></li>
@@ -109,6 +239,19 @@
                 </ul>
             </nav>
         </div>
+        
+        <!-- Menu Mobile -->
+        <div class="mobile-menu">
+            <ul>
+                <li><a href="#banner">Home</a></li>
+                <li><a href="#produtos">Produtos</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="https://wa.me/5541996125979">Contato</a></li>
+            </ul>
+        </div>
+        
+        <!-- Overlay para quando o menu mobile estiver aberto -->
+        <div class="overlay"></div>
     </header>
 
     <!-- Botão de Voltar -->
@@ -275,6 +418,11 @@
             const header = document.querySelector('header');
             const btnVoltar = document.querySelector('.btn-voltar');
             
+            // Elementos do menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mobileMenu = document.querySelector('.mobile-menu');
+            const overlay = document.querySelector('.overlay');
+            
             // Controle do carrossel
             prevBtn.addEventListener('click', () => {
                 carrossel.scrollBy({ left: -produtoWidth * 2, behavior: 'smooth' });
@@ -354,6 +502,50 @@
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
+                });
+            });
+            
+            // Menu Mobile
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                overlay.classList.toggle('active');
+                
+                // Altera o ícone do menu
+                const icon = this.querySelector('i');
+                if (this.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Fecha o menu ao clicar no overlay
+            overlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                this.classList.remove('active');
+                
+                // Restaura o ícone do menu
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // Fecha o menu ao clicar em um link
+            const mobileLinks = document.querySelectorAll('.mobile-menu a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    overlay.classList.remove('active');
+                    
+                    // Restaura o ícone do menu
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
                 });
             });
         });
