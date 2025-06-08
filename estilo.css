@@ -175,11 +175,10 @@ nav ul li a i {
 }
 
 #banner h2 .destaque-vida {
-    color: #b42289;
-    font-size: 1.4em;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    color: #23a35d;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px rgba(26, 113, 228, 0.3);
     display: inline-block;
-    animation: pulse 1.5s infinite alternate;
 }
 
 @keyframes pulse {
